@@ -9,6 +9,10 @@ CONFIG -= app_bundle
 
 TEMPLATE = app
 
+# Static link libstdc++ and libgcc to avoid GLIBCXX version issues
+# Use compiler flags to force static linking of these runtime libraries
+QMAKE_LFLAGS += -static-libstdc++ -static-libgcc
+
 SOURCES += main.cpp \
     keyspacethread.cpp \
     runthread.cpp

@@ -1,0 +1,135 @@
+[0;32m================================[0m
+[0;32mGeneric Cracker Python Packaging[0m
+[0;32m================================[0m
+[0;32mCleaning old build artifacts...[0m
+[0;32mBuilding executable with PyInstaller...[0m
+107 INFO: PyInstaller: 6.17.0, contrib hooks: 2025.10
+108 INFO: Python: 3.12.3
+110 INFO: Platform: Linux-6.8.0-88-generic-x86_64-with-glibc2.39
+110 INFO: Python environment: /usr
+138 INFO: wrote /mnt/u/Work/C-Projects/generic-cracker/cracker.spec
+151 INFO: Module search paths (PYTHONPATH):
+['/usr/lib/python312.zip',
+ '/usr/lib/python3.12',
+ '/usr/lib/python3.12/lib-dynload',
+ '/home/seawolf/.local/lib/python3.12/site-packages',
+ '/usr/local/lib/python3.12/dist-packages',
+ '/usr/lib/python3/dist-packages',
+ '/mnt/u/Work/C-Projects/generic-cracker']
+524 INFO: checking Analysis
+525 INFO: Building Analysis because Analysis-00.toc is non existent
+526 INFO: Looking for Python shared library...
+541 INFO: Using Python shared library: /lib/x86_64-linux-gnu/libpython3.12.so.1.0
+541 INFO: Running Analysis Analysis-00.toc
+542 INFO: Target bytecode optimization level: 0
+542 INFO: Initializing module dependency graph...
+542 INFO: Initializing module graph hook caches...
+558 INFO: Analyzing modules for base_library.zip ...
+1864 INFO: Processing standard module hook 'hook-encodings.py' from '/home/seawolf/.local/lib/python3.12/site-packages/PyInstaller/hooks'
+4095 INFO: Processing standard module hook 'hook-pickle.py' from '/home/seawolf/.local/lib/python3.12/site-packages/PyInstaller/hooks'
+5726 INFO: Processing standard module hook 'hook-heapq.py' from '/home/seawolf/.local/lib/python3.12/site-packages/PyInstaller/hooks'
+6427 INFO: Caching module dependency graph...
+6504 INFO: Analyzing /mnt/u/Work/C-Projects/generic-cracker/cracker.py
+6524 INFO: Processing module hooks (post-graph stage)...
+6533 INFO: Performing binary vs. data reclassification (1 entries)
+6536 INFO: Looking for ctypes DLLs
+6545 INFO: Analyzing run-time hooks ...
+6546 INFO: Including run-time hook 'pyi_rth_inspect.py' from '/home/seawolf/.local/lib/python3.12/site-packages/PyInstaller/hooks/rthooks'
+6556 INFO: Creating base_library.zip...
+6631 INFO: Looking for dynamic libraries
+6827 INFO: Warnings written to /mnt/u/Work/C-Projects/generic-cracker/build/cracker/warn-cracker.txt
+6854 INFO: Graph cross-reference written to /mnt/u/Work/C-Projects/generic-cracker/build/cracker/xref-cracker.html
+6960 INFO: checking PYZ
+6961 INFO: Building PYZ because PYZ-00.toc is non existent
+6961 INFO: Building PYZ (ZlibArchive) /mnt/u/Work/C-Projects/generic-cracker/build/cracker/PYZ-00.pyz
+7134 INFO: Building PYZ (ZlibArchive) /mnt/u/Work/C-Projects/generic-cracker/build/cracker/PYZ-00.pyz completed successfully.
+7180 INFO: checking PKG
+7180 INFO: Building PKG because PKG-00.toc is non existent
+7181 INFO: Building PKG (CArchive) cracker.pkg
+10384 INFO: Building PKG (CArchive) cracker.pkg completed successfully.
+10427 INFO: Bootloader /home/seawolf/.local/lib/python3.12/site-packages/PyInstaller/bootloader/Linux-64bit-intel/run
+10427 INFO: checking EXE
+10428 INFO: Building EXE because EXE-00.toc is non existent
+10428 INFO: Building EXE from EXE-00.toc
+10429 INFO: Copying bootloader EXE to /mnt/u/Work/C-Projects/generic-cracker/dist/cracker
+10443 INFO: Appending PKG archive to custom ELF section in EXE
+46032 INFO: Building EXE from EXE-00.toc completed successfully.
+46064 INFO: Build complete! The results are available in: /mnt/u/Work/C-Projects/generic-cracker/dist
+[0;32mExecutable built successfully: 7.2M[0m
+[1;33mRemoving old package directory...[0m
+[0;32mCreating package structure...[0m
+[0;32mCopying executable...[0m
+[0;32mCopying MDXfind binaries...[0m
+[0;32mCopying documentation...[0m
+[0;32mCreating deployment instructions...[0m
+[0;32mCreating version info...[0m
+[0;32mPackage contents:[0m
+/mnt/u/Work/C-Projects/generic-cracker/generic-cracker
+/mnt/u/Work/C-Projects/generic-cracker/generic-cracker/cracker
+/mnt/u/Work/C-Projects/generic-cracker/generic-cracker/DEPLOYMENT.md
+/mnt/u/Work/C-Projects/generic-cracker/generic-cracker/LICENSE
+/mnt/u/Work/C-Projects/generic-cracker/generic-cracker/mdx_bin
+/mnt/u/Work/C-Projects/generic-cracker/generic-cracker/mdx_bin/mdsplit
+/mnt/u/Work/C-Projects/generic-cracker/generic-cracker/mdx_bin/mdsplit-32
+/mnt/u/Work/C-Projects/generic-cracker/generic-cracker/mdx_bin/mdsplit-32.exe
+/mnt/u/Work/C-Projects/generic-cracker/generic-cracker/mdx_bin/mdsplit.arm6
+/mnt/u/Work/C-Projects/generic-cracker/generic-cracker/mdx_bin/mdsplit.arm7
+/mnt/u/Work/C-Projects/generic-cracker/generic-cracker/mdx_bin/mdsplit.arm8
+/mnt/u/Work/C-Projects/generic-cracker/generic-cracker/mdx_bin/mdsplit.exe
+/mnt/u/Work/C-Projects/generic-cracker/generic-cracker/mdx_bin/mdsplit.freebsd
+/mnt/u/Work/C-Projects/generic-cracker/generic-cracker/mdx_bin/mdsplit.mac
+/mnt/u/Work/C-Projects/generic-cracker/generic-cracker/mdx_bin/mdsplit.macm1
+/mnt/u/Work/C-Projects/generic-cracker/generic-cracker/mdx_bin/mdsplit.power8
+/mnt/u/Work/C-Projects/generic-cracker/generic-cracker/mdx_bin/mdxfind
+/mnt/u/Work/C-Projects/generic-cracker/generic-cracker/mdx_bin/mdxfind-32
+/mnt/u/Work/C-Projects/generic-cracker/generic-cracker/mdx_bin/mdxfind-32.exe
+/mnt/u/Work/C-Projects/generic-cracker/generic-cracker/mdx_bin/mdxfind.arm6
+[0;32mPackage size: 3.5K[0m
+[0;32mCreating 7z archive...[0m
+
+7-Zip 23.01 (x64) : Copyright (c) 1999-2023 Igor Pavlov : 2023-06-20
+ 64-bit locale=en_US.UTF-8 Threads:8 OPEN_MAX:1048576
+
+Scanning the drive:
+2 folders, 27 files, 44900023 bytes (43 MiB)
+
+Creating archive: generic-cracker.7z
+
+Add new data to archive: 2 folders, 27 files, 44900023 bytes (43 MiB)
+
+
+Files read from disk: 27
+Archive size: 15740711 bytes (16 MiB)
+Everything is Ok
+[0;32mArchive created: generic-cracker.7z (16M)[0m
+[0;32mCompression: 44900023 → 15740711 bytes (70.0% reduction)[0m
+[0;32mChecking dependencies...[0m
+[1;33mExecutable dependencies:[0m
+	linux-vdso.so.1 (0x00007ffc47bf2000)
+	libdl.so.2 => /lib/x86_64-linux-gnu/libdl.so.2 (0x0000783e6366a000)
+	libz.so.1 => /lib/x86_64-linux-gnu/libz.so.1 (0x0000783e6364e000)
+	libpthread.so.0 => /lib/x86_64-linux-gnu/libpthread.so.0 (0x0000783e63649000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x0000783e63400000)
+	/lib64/ld-linux-x86-64.so.2 (0x0000783e63679000)
+[0;32m================================[0m
+[0;32mPackaging complete![0m
+[0;32m================================[0m
+
+Package directory: [0;32m/mnt/u/Work/C-Projects/generic-cracker/generic-cracker[0m
+Archive file: [0;32mgeneric-cracker.7z (16M)[0m
+
+[0;32m✅ Key Advantages:[0m
+  • No Qt5 dependencies
+  • No libstdc++ / GLIBCXX issues
+  • Single self-contained executable
+  • Portable across Linux distributions
+
+To test the package:
+  [1;33mcd /mnt/u/Work/C-Projects/generic-cracker/generic-cracker[0m
+  [1;33m./cracker --help[0m
+  [1;33m./cracker keyspace -w /path/to/wordlist.txt[0m
+
+To deploy:
+  1. Copy [0;32mgeneric-cracker.7z[0m to target system
+  2. Extract: [1;33m7z x generic-cracker.7z[0m
+  3. Run: [1;33m./generic-cracker/cracker crack -a hashes.txt -w wordlist.txt[0m

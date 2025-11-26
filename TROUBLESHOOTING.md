@@ -2,21 +2,35 @@
 
 ## Common Errors and Solutions
 
-### 1. GLIBCXX Version Errors
+### 1. GLIBCXX Version Errors ⚠️ IMPORTANT
 
 **Error:**
 ```
 error while loading shared libraries: libstdc++.so.6: version `GLIBCXX_3.4.32' not found
 ```
 
-**Cause:** The build system had a newer compiler than the target system.
+**Cause:** The binary was built on a system with a newer GLIBCXX version (e.g., Ubuntu 24.04) than the target system has available.
 
-**Solution:** The package intentionally does NOT bundle `libstdc++.so.6` or `libgcc_s.so.1` to avoid this issue. The system's versions are used instead.
+**Root Cause:** The cracker depends on Qt5Core.so, which is a shared library that has dynamic dependencies on libstdc++. These dependencies CANNOT be statically linked because they come from Qt5Core itself, not from our code.
 
-**If you still see this error:**
-- Ensure you're using the latest package built with `./package.sh`
-- Verify `libstdc++.so.6` is NOT in the `lib/` directory
-- Check system compatibility: `strings /usr/lib/x86_64-linux-gnu/libstdc++.so.6 | grep GLIBCXX`
+**Primary Solution:**
+Build the cracker on a system with an **older GLIBCXX version** compatible with your deployment environment:
+- Ubuntu 20.04 LTS (GLIBCXX_3.4.28) - Recommended
+- Debian 10 (GLIBCXX_3.4.26)
+- CentOS 7 (GLIBCXX_3.4.19)
+
+**For detailed analysis and all solutions, see:** [GLIBCXX_SOLUTION.md](GLIBCXX_SOLUTION.md)
+
+**Quick Check:**
+```bash
+# On target system - check available GLIBCXX versions
+strings /usr/lib/x86_64-linux-gnu/libstdc++.so.6 | grep GLIBCXX | sort -V | tail -5
+
+# On build system - check what binary requires
+objdump -T ./cracker | grep GLIBCXX | sort -V | tail -5
+```
+
+The target system must have ALL GLIBCXX versions that the binary requires.
 
 ---
 
