@@ -140,7 +140,10 @@ class CrackerApp:
                 cmd.append(wordlist_to_use)
 
                 # Prepare for progress tracking
-                progress_tracker = ProgressTracker(total_keyspace, skip)
+                # Note: When using temp wordlist (limit specified), MDXfind reports
+                # line numbers starting from 0, so we pass skip=0 to the tracker
+                tracker_skip = 0 if limit else skip
+                progress_tracker = ProgressTracker(total_keyspace, tracker_skip)
                 cracked_hashes = []
 
                 try:
