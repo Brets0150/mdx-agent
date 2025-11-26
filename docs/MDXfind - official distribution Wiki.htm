@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<!-- $Id: 00-HEADER.html,v 1.275 2025/11/11 03:02:09 royce Exp royce $ -->
+<html lang="en-US"><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+  <title>MDXfind - official distribution</title>
+  <meta charset="utf-8">
+
+  <meta name="description" content="The official distribution point for MDXfind - the highly optimized, CPU-based hash-cracking tool, by Waffle (feat. hops)">
+
+  <meta name="language" content="en">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="icon" sizes="16x16 32x32 96x96" href="https://www.techsolvency.com/favicon.ico">
+  <link rel="stylesheet" href="MDXfind%20-%20official%20distribution%20Wiki_files/default.css" type="text/css" media="screen">
+  <link rel="preload" as="font" href="https://www.techsolvency.com/fonts/Exo-2-regular/Exo-2-regular.woff2" type="font/woff2" crossorigin="">
+
+<style>.cip-genpw-icon.cip-icon-key-small {background-image: url(moz-extension://0a1b740d-71ed-49da-896e-bee18e68e400/icons/key_16x16.png); }
+.cip-genpw-icon.cip-icon-key-big {background-image: url(moz-extension://0a1b740d-71ed-49da-896e-bee18e68e400/icons/key_24x24.png); }
+</style></head>
+
+<body data-new-gr-c-s-check-loaded="8.934.0" data-gr-ext-installed="">
+
+<h1><a href="https://www.techsolvency.com/">Tech Solvency</a> / <a href="https://www.techsolvency.com/pub/">pub</a> / <a href="https://www.techsolvency.com/pub/bin/">bin</a> / mdxfind</h1>
+
+<hr>
+
+<div class="center">
+<p>
+<img src="MDXfind%20-%20official%20distribution%20Wiki_files/MDXfind-small.png" width="124" height="124" alt="MDXfind logo - diagonal magnifying glass with a large hash under the glass, and a lemniscate below. Background is gradient lilac." title="MDXfind logo"><!-- 8322 --><!-- skipped, bigger: webp -->
+<br>
+</p><div class="larger"><strong>MDXfind</strong></div>
+    <em>the deep-dive, CPU-based hash-cracking tool</em>
+<br>
+<br>
+<em>
+    <!-- start update_status -->
+    Latest versions:
+    <br><br>
+    MDXfind 1.136 (2025-11-10)
+    <br>
+    MDsplit 1.24 (2025-08-28)
+
+    <!-- end update_status -->
+</em>
+<br>
+<br>
+
+<div class="large"><a href="#download">Jump to download</a></div>
+<br>
+
+<hr>
+
+<ul class="nobullet">
+    <li><a href="#what-is-mdxfind">What is MDXfind?</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#requirements">Requirements</a></li>
+    <li><a href="#help">Help and examples</a></li>
+    <li><a href="#mdsplit">mdsplit (companion tool)</a></li>
+    <li><a href="#changelog">Changelog</a></li>
+    <li><a href="#metadata">Metadata</a></li>
+    <li><a href="#references">References</a></li>
+    <li><a href="#download">Download</a></li>
+</ul>
+
+</div>
+
+<a id="what-is-mdxfind"></a>
+<hr>
+
+<h2>What is MDXfind?</h2>
+
+<p>
+MDXfind is a command-line hash-cracking tool for security researchers, pen testers, etc. 
+</p>
+
+<p>MDXfind <em>"runs large numbers of unsolved hashes, using many algorithms, against large numbers of plaintext words, very quickly"</em>
+(<a href="https://infosec.exchange/@Waffle_Real">Waffle</a>, primary author).
+
+</p><p>
+MDXfind is somewhat different from other hash-cracking software (see 
+below). The learning curve may be a little steep at first, but if you 
+have a pile of hashes of unknown type, or a hundred million hashes that 
+you need to pare down quickly for other attacks ... MDXfind may be the 
+perfect tool for the job.
+</p>
+
+<p>While MDXfind is CPU based (which may seem odd in the era of GPU cracking), don't worry -- its core features work nicely on CPU!
+</p>
+
+<a id="features"></a>
+<hr>
+
+<h2>How MDXfind is different</h2>
+
+<h3>Feature differences</h3>
+<ul>
+    <li><strong>Mixed hash types</strong>: MDXfind will crack many different hash types <em>simultaneously</em>. Single target hashlists with many different hash types are supported.</li>
+    <li><strong>Arbitrary iteration</strong>: MDXfind can try arbitrary numbers of iteration counts of most supported algorithms - in a single job (effectively <em>millions</em> of end-result algorithms).</li>
+    <li><strong>Scale</strong>: MDXfind can efficiently handle <strong><em>very</em> large hashlists</strong> (100M+) and wordlists.</li>
+    <li><strong>Long plaintext support</strong>: MDXfind can handle plaintexts of lengths <strong>up to 40,960 bytes</strong>.</li>
+    <li><strong>Truncated and rotated hashes</strong>: MDXfind cracks rotated and truncated hashes (transformations of the hash itself), as long as at least 8 bytes of a hash match.</li>
+    <li><strong>Hash generation</strong>: MDXfind can also <em>generate</em> any supported hashes and iteration counts (using <kbd>-z</kbd>).</li>
+    <li><strong>Regex-based hash-type specification</strong>: You can use regular expressions to match just specific hash types to search for.</li>
+    <li><strong>Hash-type labels</strong>: All output founds are 
+prefixed with a hash type ID. This means that, unlike some other 
+cracking tools, it is always clear which algorithm was detected for each
+ hash.</li>
+</ul>
+
+<h3>Operational differences</h3>
+<ul>
+    <li>Unlike some other cracking tools, output goes solely to <kbd>stdout</kbd>. Use <kbd>tee -a</kbd> or equivalent to append to a results file of your choice.</li>
+    <li><s>MDXfind does not provide a real-time estimate of ongoing 
+cracking hashrate on its status line. (It does provide other status 
+information - see <a href="#output-and-tuning">Output and tuning</a> below), and does provide an approximate hashrate once a run is completed.</s> As of 1.133, ongoing rate of operation is shown.</li>
+    <li>MDXfind does not automatically compare a potfile with a target 
+file on startup and skip any existing founds. Instead, periodically 
+remove found hashes from your target file using the included companion <kbd>mdsplit</kbd> utility (more on that later).</li>
+    <li>MDXfind is currently only supported on CPU (no GPU support).</li>
+</ul>
+
+<h2>Other MDXfind features</h2>
+<ul>
+    <li>Multi-platform: ARMv6, ARMv7, ARMv8, FreeBSD+, Linux (32/64), macOS/OS x (x86, M1), POWER8, and Windows (32/64)</li>
+    <li>Multi-algorithm: tries <strong><!-- start algo_count -->766<!-- end algo_count --></strong> different <a href="https://www.techsolvency.com/pub/bin/mdxfind/algorithms.txt">core algorithm combinations/variants</a> as observed in the wild - in parallel <strong>in a single job</strong>, using <a href="http://judy.sourceforge.net/">Judy arrays</a></li>
+    <li>Process lists of hashes <strong>with mixed algorithm types</strong> (output indicates the algorithm; use <kbd>mdsplit</kbd> to separate out into per-algorithm lists)</li>
+    <li>Include and exclude hash types by name, using regex</li>
+    <li>Skip N words from beginning of a wordlist (can be used for simple distribution of work)</li>
+    <li>Automate real-world transformations: email address munging, Unicode expansion, HTML escapes</li>
+    <li>Read salts, usernames, suffixes, and/or rules from external files</li>
+    <li>Configure arbitrary CPU thread count</li>
+    <li>Apply multiple rules files (either in series or as dot-product)</li>
+    <li>Recurse wordlist directories</li>
+    <li>Take input from stdin</li>
+</ul>
+
+<h2>When to use MDXfind</h2>
+<ul>
+    <li>When you have a <strong>mix</strong> of hash types</li>
+    <li>When working with <strong>unknown</strong> hash types</li>
+    <li>When you have many words to try on many hashes</li>
+    <li>To quickly cull common plains from a very large hashlist</li>
+    <li>On GPU-unfriendly algorithms</li>
+    <li>To quickly process many previous hashlists - with new candidate plaintexts, when new algorithms appear, with new rules, etc.</li>
+</ul>
+
+<h2>When not to use MDXfind</h2>
+<ul>
+    <li>For mask and brute-force attacks on GPU-friendly algorithms</li>
+    <li>For distributed hash clusters (hashtopolis, etc do not support it ... yet)</li>
+</ul>
+
+<h2>What MDXfind is not</h2>
+<ul>
+    <li>A few vendors on VirusTotal sometimes mis-detect MDXFind as a coin miner, due to its hashing features.</li>
+</ul>
+
+<a id="requirements"></a>
+
+<hr>
+
+<h2>Requirements</h2>
+
+<p>
+MDXfind is distributed as standalone binaries for the command line. There is no installer, and there is no GUI.
+</p>
+
+<p>MDXfind should work "out of the box" on: Windows 32/64, Linux (x86 
+32/64, ARM6/7/8, and POWER8), FreeBSD 64, macOS (Intel or M), and Linux 
+POWER8. See <a href="https://www.techsolvency.com/pub/bin/mdxfind/file-output.txt"><kbd>file(1)</kbd> output</a> for minimum kernel versions.</p>
+
+<p>
+MDXfind uses the following libraries. As of version 1.130, these are
+<strong>included directly</strong> (no dependencies required).
+</p><ul>
+    <li><a href="https://judy.sourceforge.net/">Judy</a> (for dynamic arrays)</li>
+    <li><a href="https://mhash.sourceforge.net/">Mhash</a> (for hashing)</li>
+    <li><a href="https://www.pcre.org/">libpcre</a> 8.x (for regular expressions)</li>
+</ul>
+
+<p>If you have an update to these requirements, <a href="mailto:royce@techsolvency.com">let me know</a>.
+</p>
+
+<a id="help"></a>
+<hr>
+<h2>Help and examples</h2>
+
+<h3>Simple example usage:</h3>
+
+<p>This example shows a basic <kbd>mdxfind</kbd> run, followed by using <kbd>mdsplit</kbd> to remove all discovered
+solutions from the target.</p>
+
+<p><em>Note: on the Windows command line, use <strong>double quotes</strong> instead of single quotes around the regex.</em></p>
+
+<pre>$ cat example-hashes.txt
+5a22e6c339c96c9c0513a46e44c39683
+5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8
+5f4dcc3b5aa765d61d8327deb882cf99
+696d29e0940a4957748fe3fc9efd22a3
+7b3b4de00794a247cf8df8e6fbfe19bf
+8846f7eaee8fb117ad06bdd830b7586c
+
+$ cat example-wordlist.dict
+password
+
+# Run the attack. All three requested hash types 
+# are attempted in a single attack run.
+$ mdxfind -h '^(SHA1|MD5|NTLM)$' \
+   -i 3 -f example-hashes.txt example-wordlist.dict \
+   | tee -a example-found.res
+
+Iterations set to 3
+Working on hash types: MD5 SHA1 NTLM
+Took 0.00 seconds to read hashes
+Searching through 6 unique hex hashes from example-hashes.txt
+Maximum hash chain depth is 1
+Minimum hash length is 32 characters
+Using 2 cores
+
+Done - 2 threads caught
+1 lines processed in 0 seconds
+1.00 lines per second
+0.00 seconds hashing, 11 total hash calculations
+0.01M hashes per second (approx)
+1 total files
+1 MD5x01 hashes found
+1 MD5x02 hashes found
+1 MD5x03 hashes found
+1 SHA1x01 hashes found
+1 NTLMx01 hashes found
+5 Total hashes found
+MD5x01 5f4dcc3b5aa765d61d8327deb882cf99:password
+MD5x02 696d29e0940a4957748fe3fc9efd22a3:password
+MD5x03 5a22e6c339c96c9c0513a46e44c39683:password
+SHA1x01 5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8:password
+NTLMx01 8846f7eaee8fb117ad06bdd830b7586c:password
+
+$ cat example-found.res
+MD5x01 5f4dcc3b5aa765d61d8327deb882cf99:password
+MD5x02 696d29e0940a4957748fe3fc9efd22a3:password
+MD5x03 5a22e6c339c96c9c0513a46e44c39683:password
+SHA1x01 5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8:password
+NTLMx01 8846f7eaee8fb117ad06bdd830b7586c:password
+
+# Remove all found hashes from our target file, 
+# distributing hash:found pairs into separate files
+# per algorithm.
+# This can be done iteratively (new results will append).
+
+# Check how big the target hashfile is.
+$ wc -l example-hashes.txt
+6 example-hashes.txt
+# Make a backup - we're about to change it.
+$ cp -p example-hashes.txt example-hashes.txt.orig
+
+# Split the founds per type; remove hashes from target.
+$ mdsplit -f example-found.res example-hashes.txt
+5 result lines processed, 5 types found
+MD5x01 MD5x02 MD5x03 NTLMx01 SHA1x01
+example-hashes.txt had 5 hits
+
+Total 5 hashes found
+
+# Check our split files.
+$ head -n 1 example-hashes.*x0*
+==&gt; example-hashes.MD5x01 &lt;==
+5f4dcc3b5aa765d61d8327deb882cf99:password
+
+==&gt; example-hashes.MD5x02 &lt;==
+696d29e0940a4957748fe3fc9efd22a3:password
+
+==&gt; example-hashes.MD5x03 &lt;==
+5a22e6c339c96c9c0513a46e44c39683:password
+
+==&gt; example-hashes.NTLMx01 &lt;==
+8846f7eaee8fb117ad06bdd830b7586c:password
+
+==&gt; example-hashes.SHA1x01 &lt;==
+5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8:password
+
+# The found hashes have been removed from the target.
+$ wc -l example-hashes.txt*
+1 example-hashes.txt
+5 example-hashes.txt.orig
+</pre>
+
+<h3>Slightly more advanced example</h3>
+<p>(adapted from @winxp5421's talk, with each line explicated):</p>
+
+<pre># Try all unsalted hash types, up to five iterations.
+$ mdxfind -h ALL -h '!salt,!user,!crypt' -i 5 \
+    -f unknown.txt /dict/top-10k-pass.dict \
+    | tee -a out.res
+
+   # Search every algorithm, except ...
+   -h ALL
+
+   # ... skip salted explicit (!salt), implicit (!crypt)
+   -h '!salt,!user,!crypt'
+
+   # Iterate 1 to 5 times, inclusive.
+   -i 5
+
+   # Specify target hashlist.
+   -f unknown.txt
+
+   # Specify wordlist (input dictionary).
+   /dict/top-10k.pass.dict
+
+   # Append to outfile (where results go).
+   | tee -a out.res
+</pre>
+
+<p>
+(Using &nbsp;'<kbd>| tee -a out.res</kbd>' &nbsp; lets you watch the output; use &nbsp;'<kbd> &gt; out.res</kbd>'&nbsp; instead
+if you won't want to watch, or <kbd>tee</kbd> isn't available on your system.)
+</p>
+
+<h3>Specifying hash types</h3>
+
+<p>To tell MDXfind which hash types you want to try, you use use regular
+ expressions that matches the hash types. Case-insensitivity is always 
+implied.</p>
+
+<p>To see the list of available hash types, run MDXfind with just <kbd>-h</kbd> with no other parameters.</p>
+
+<p>At startup, you can see which hash types were selected (the "Working 
+on hash types:" line). You can use this to check whether your regex is 
+doing what you're expecting.</p>
+
+<p>Tip: if you know you only need one or more specific hash types, your attack will be <em>much</em> faster if you only specify just the relevant types.</p>
+
+<p>Examples:</p>
+
+<p><em>Note: on the Windows command line, use <strong>double quotes</strong> instead of single quotes around the regex.</em></p>
+
+<pre># Match only a single hash type.
+$ mdxfind -h '^MD5$' [...]
+
+# Match all hash types beginning with MD5.
+# (usually means MD5 was the last step in the algorithm)
+# Note the difference from above - no '$' at the end.
+$ mdxfind -h '^MD5' [...]
+
+# Only match these three specific hash types.
+$ mdxfind -h '^(SHA1|MD5|NTLM)$' [...]
+
+# Match all hash types beginning with these strings.
+# Again, note the missing '$'.
+$ mdxfind -h '^(SHA1|MD5|NTLM)' [...]
+
+# Match all hash types *except* any containing these string..
+# Exclamation points may have special meaning in your shell,
+# so quoting may be necessary.
+mdxfind -h ALL -h '!salt,!user,!crypt,!revp,!leet' [...]
+</pre>
+
+<p>As of version 1.133, the undocumented <kbd>-m</kbd> flag, which lets you specify hash types using hashcat mode IDs (one or more separated by commas) now also supported a <kbd>-m eNN</kbd> syntax, which lets you specify an mdxfind hash type using its position in -h (1 for MD5, etc.)
+</p>
+
+<a id="threading"></a>
+<h3>Threading</h3>
+<p>
+By default, MDXfind will politely but thoroughly use all available cores/threads. To override this, you can use <kbd> -t [N]</kbd> (where N is the number of threads to use).
+</p>
+
+<a id="z"></a>
+<h3>Generating hashes with <kbd>-z</kbd></h3>
+
+<p>
+You can use <kbd>mdxfind</kbd>'s <kbd>-z</kbd> flag to <em>generate</em> arbitrary hashes:
+</p>
+
+<pre># Use NUL instead of /dev/null on Windows
+$ echo password | mdxfind -h "^MD5$" -z -f /dev/null -i 5 stdin 2&gt;/dev/null
+MD5x01 5f4dcc3b5aa765d61d8327deb882cf99:password
+MD5x02 696d29e0940a4957748fe3fc9efd22a3:password
+MD5x03 5a22e6c339c96c9c0513a46e44c39683:password
+MD5x04 e777a29bee9227c8a6a86e0bad61fc40:password
+MD5x05 7b3b4de00794a247cf8df8e6fbfe19bf:password
+</pre>
+
+<p>
+Expanded examples:
+</p>
+
+<ul>
+    <li><a href="https://gist.github.com/roycewilliams/794e4d7a81e7840deae29fdc7c03fa10">first 10000 rounds of MD5 of 'password'</a></li>
+    <li><a href="https://gist.github.com/roycewilliams/5e8d676ac4fe54fb7b6cb233b0721f57">first 5 iterations of 'password' in most supported unsalted algorithms</a></li>
+</ul>
+
+<a id="testvec"></a>
+<h3>Generating sequences of bytes with $TESTVEC</h3>
+
+<p>
+<kbd>$TESTVEC[bytes x count]</kbd> is a way to create patterns up to 
+2,000,000 bytes as a candidate for any algorithm.  Typically, these are 
+used as ways to create known patterns to test algorithms.
+</p>
+<p>
+<kbd>$TESTVEC</kbd> accepts one or more byte, and repeats them the 
+specified number of times, to a maximum size of 2,000,000 bytes (bytes x
+ repetition size).
+</p>
+
+<p>
+Such sequences are also part of the FIPS 140-2 standard:
+</p>
+
+<blockquote>
+A file containing the binary-coded form of the ASCII string which 
+consists of 1,000,000 repetitions of the character "a" results in a 
+SHA-1 message digest of 34aa973c d4c4daa4 f61eeb2b dbad2731 6534016f.
+</blockquote>
+
+<pre># Simple example - a single NUL byte:
+$ echo '$TESTVEC[00 x 1]' \
+  | mdxfind -h ^sha1$ -z -f /dev/null stdin 2&gt;/dev/null
+SHA1x01 5ba93c9db0cff93f52b521d7420e43f6eda2784f:$TESTVEC[00 x 1]
+
+# ... which is equivalent to:
+$ echo -n '\x00' | xxd -p -r | sha1sum
+5ba93c9db0cff93f52b521d7420e43f6eda2784f  -
+
+# The classic FIPS example - byte \x61, repeated 1 million times.
+$ echo '$TESTVEC[61 x 1000000]' \
+  | mdxfind -h ^sha1$ -z -f /dev/null stdin 2&gt;/dev/null
+SHA1x01 34aa973cd4c4daa4f61eeb2bdbad27316534016f:$TESTVEC[61 x 1000000]
+</pre>
+
+<p>$TESTVEC was introduced in MDXfind 1.16 in May 2014.</p>
+
+<a id="output-and-tuning"></a>
+<h3>Output and tuning</h3>
+
+<p>Cracking output goes straight to stdout (unless redirected). Each 
+hash:solution pair is prefixed with the discovered hash type and 
+iteration (x99 syntax):</p>
+
+<pre>MD5x01 5f4dcc3b5aa765d61d8327deb882cf99:password
+MD5x02 696d29e0940a4957748fe3fc9efd22a3:password
+MD5x03 5a22e6c339c96c9c0513a46e44c39683:password
+SHA1x01 5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8:password
+NTLMx01 8846f7eaee8fb117ad06bdd830b7586c:password
+</pre>
+
+<p>MDXfind will periodically show a status / progress "comfort message" 
+line (every 15 seconds). This status output goes to stderr, so if you 
+are directing output somewhere else, the status line will be the only 
+thing you see while the attack is in progress:</p>
+
+<pre>Working on mybigwordlist w=62, line 2771, Found=2809, 0.54Mh/s, 184.73c/s
+Working on mybigwordlist w=62, line 5542, Found=8532, 0.74Mh/s, 184.73c/s
+</pre>
+
+<p><kbd>H/s</kbd> is hash operations per second (often more than one in each attempt of a hashtype)</p>
+<p><kbd>c/s</kbd> is candidates per second (e.g., bcrypt attempts per second)</p>
+
+<p>Note that initial values may take time to populate (the first job has to complete).</p>
+
+<p>Status output and tuning commentary, from Waffle:</p>
+<ul>
+    <li>The <strong><kbd>w=</kbd></strong> argument shows how "busy" <kbd>mdxfind</kbd>
+ is.  If you have a lot of cores, this number can be very high.  It is 
+actually the number of work units waiting in the queue to be processed, 
+where each work unit is an algorithm and block of lines to be processed.
+  If you are using a simple algorithm, like MD5, most times MDXfind will
+ out-pace the speed of your disk, and w= will be a very low number.  
+Doing a "hard" algorithm like MD5DSALT, or BCRYPT for example, this 
+number will be high, meaning that your hard drive is able to produce 
+data faster than the algorithms can consume it.</li>
+    <li>"<strong><kbd>line</kbd></strong>" is the line number in the 
+current file.  It's not random - it reads a "memory chunk" of data from 
+the file, then breaks that into lines (so there will be a lot of lines 
+if each line is a very short password, and there will be fewer lines if 
+each line is a long password).  It increases as block of lines is run 
+through all of the algorithms specified (might be just one algorithm, or
+ you might have access them all).Take the line number you see, and back 
+up a few thousand (just for good measure, as there's no way to know 
+exactly which line it was on as the comfort messages update about every 
+15 seconds, and <kbd>mdxfind</kbd> can process millions per second), and use that in the -w for the next run. </li>
+    <li><strong>Found</strong> shows the ongoing count of founds.</li>
+</ul>
+
+<a id="mdsplit"></a>
+
+<hr>
+
+<h2><kbd>mdsplit</kbd> - <kbd>mdxfind</kbd>'s companion tool</h2>
+<p>The purpose of <kbd>mdsplit</kbd> is to remove hashes with solutions from a target hashlist,
+using MDXfind result files (traditionally named with a <kbd>.res</kbd> extension) as a reference,
+separating them into per-hashtype files with the hash type as the files extension.</p>
+
+<p>Typical usage examples:</p>
+<pre># Remove all hashes found in foo.res from unsolved.hashes.txt.
+mdsplit -f foo.res unsolved-hashes.txt
+
+# Do the same for multiple files, from stdin.
+cat foo.res bar.res | mdsplit unsolved-hashes.txt
+
+# Run a cracking job, automatically sending mdxfind output to mdsplit.
+cat unfound-hashset*.txt | mdxfind -i 3 /tmp/words | mdsplit *.txt
+</pre>
+
+<p>If you are working with a results file that does not contain hash-type prefixes (such as a
+potfile from hashcat or john), you can use the <kbd>-t</kbd> flag to specify a default hash type.
+(Of course, if your potfile contains more than one "silent" hash type, this won't work.)
+</p>
+
+<p>
+When working with large hashlists (millions+), other tools like John the Ripper and hashcat
+can take non-trivial time to process the hashlist at each startup. (When doing many small attacks,
+this can sometimes mean that the startup time is higher than the attack time!). So a very common workflow 
+is to use <kbd>mdxfind</kbd> to find a lot of hashes early, and then <kbd>mdsplit</kbd> 
+to remove the found hashes from your target hashlist. This can reduce your target to a manageable
+size for other tools. For hashcat users, this is similar to hashcat's <kbd>--remove</kbd>, but after the fact.
+</p>
+
+<hr>
+
+<h2>Full usage output</h2>
+
+<!-- start usage_output -->
+See <a href="https://www.techsolvency.com/pub/bin/mdxfind/usage.txt">usage.txt</a> for the default command-line usage output for both <kbd>mdxfind</kbd> and <kbd>mdsplit</kbd>.
+
+To see full usage for <kbd>mdxfind</kbd>, use the <kbd>-?</kbd> parameter.
+<!-- end usage_output -->
+
+<br>
+<br>
+
+<a id="changelog"></a>
+
+<hr>
+
+<h2>Changelog</h2>
+<p>
+Here is <a href="https://www.techsolvency.com/pub/bin/mdxfind/CHANGES.txt"> the full known changelog</a> (text file) for both <kbd>mdxfind</kbd> and <kbd>mdsplit</kbd>.
+</p>
+
+<a id="metadata"></a>
+
+<hr>
+
+<h2>Metadata</h2>
+<p>
+The upstream distribution from Waffle just contains binaries. <a href="mailto:royce@techsolvency.com">I</a> generate some useful metadata and maintain <a href="https://www.techsolvency.com/pub/bin/mdxfind/CHANGES.txt">a changelog</a> here, but <strong>my metadata is not in the distribution zipfile</strong>.
+</p><ul>
+    <li><a href="https://www.techsolvency.com/pub/bin/mdxfind/usage.txt">MDXfind usage</a></li>
+    <li><a href="https://www.techsolvency.com/pub/bin/mdxfind/algorithms.txt">MDXfind algorithms list</a> - see the
+    <a href="https://docs.google.com/spreadsheets/d/1SBv-oRbXb8OapSD1BSPClPXIfiWOL2oH_zTls4sz1rk/edit#gid=0">Hash Types Rosetta Stone</a>
+        for definitions of some (the naming conventions can be confusing)</li>
+    <li><a href="https://www.techsolvency.com/pub/bin/mdxfind/file-output.txt">MDXfind binary types</a> (<kbd>file</kbd> output)</li>
+    <li>checksums: <a href="https://www.techsolvency.com/pub/bin/mdxfind/CHECKSUMS.MD5.txt">MD5</a>, <a href="https://www.techsolvency.com/pub/bin/mdxfind/CHECKSUMS.SHA256.txt">SHA256</a></li>
+    <li><a href="https://www.techsolvency.com/pub/bin/mdxfind/CHANGES.txt">Changelog</a></li>
+</ul>
+
+<p>There is also a little bit of metadata provided to me directly by Waffle (but isn't part of the zipfile):
+
+</p><ul>
+    <li><a href="https://www.techsolvency.com/pub/bin/mdxfind/algo_defs.txt">algo_defs.txt</a> - this is the list of all hashtypes, with an ID number assigned by the order they were added. Can be used with <kbd>-m eNNN</kbd></li>
+    <li><a href="https://www.techsolvency.com/pub/bin/mdxfind/maphashcat.txt">maphashcat.txt</a> - maps the above hashtype ID number to the hashcat equivalent mode ID</li>
+</ul>
+
+<a id="references"></a>
+<hr>
+
+<h2>References</h2>
+
+<h3>Talks</h3>
+<ul>
+    <li><a href="http://www.irongeek.com/i.php?page=videos/cyphercon2/cyphercon-2-200-cluster-cracking-passwords-mdxfind-robert-reif">Introductory video</a>
+from
+<a href="https://twitter.com/winxp5421">@winxp5421</a> (of the <a href="https://blog.cynosureprime.com/">CynoSure Prime</a> cracking team)</li>
+    <li>Will Hunt's <a href="https://www.youtube.com/watch?v=09fEMpbXq8w">Password Cracking 101+1: Part 14 - Unknown hash cracking with mdxfind</a></li>
+</ul>
+
+<h3>Forum posts</h3>
+<p>Posts with more info and examples:
+</p>
+<p>(Moved/broken references, necromancy TBD - see Wayback Machine in the meantime:)
+<br>
+<a href="https://www.google.com/search?q=site%3Ahttps%3A%2F%2Fforum.hashkiller.io%2Findex.php+mdxfind">Google search for MDXfind on Hashkiller forums</a> |
+<a href="https://hashes.org/forum/showthread.php?tid=10">usage from hashes.org forums</a> |
+<a href="https://forum.hashkiller.co.uk/topic-view.aspx?t=5803">thread 1</a> |
+<a href="https://forum.hashkiller.co.uk/topic-view.aspx?t=20772&amp;m=149893">thread 2</a> |
+<a href="https://forum.hashkiller.co.uk/topic-view.aspx?t=16325&amp;m=115659">thread 3</a>
+</p>
+
+<h3>Other references</h3>
+<ul>
+    <li>0xln's <a href="https://0xln.pw/MDXfindbible">MDXfind Bible</a> - a nice, general 'getting started' howto for MDXfind, step by step, with a couple of different use cases. (<a href="https://www.techsolvency.com/pub/bin/mdxfind/archive/MDXfindbible.html">local raw mirror</a>)</li>
+    <li>cyclone's alternate mirror: <a href="https://github.com/cyclone-github/mdxfind">cyclone-github/mdxfind</a></li>
+</ul>
+
+<h3>See also</h3>
+<ul>
+    <li><a href="https://docs.google.com/spreadsheets/d/1SBv-oRbXb8OapSD1BSPClPXIfiWOL2oH_zTls4sz1rk/edit#gid=0">Hash Types Rosetta Stone</a>
+ - spreadsheet of equivalent hash type identifiers across multiple 
+cracking suites, maintained by the cracking community. Includes John the
+ Ripper, hashcat, and MDXfind identifiers.</li>
+    <li><a href="https://github.com/Cynosureprime/rling">rling</a> - 
+remove duplicates (and optionally sort), very quickly, and with a 
+variety of memory/speed/storage trade-off options. Also from Waffle and 
+team. See <a href="https://forum.hashkiller.io/index.php?threads/rling-rli-replacement-testing-required.40431/page-3">this thread</a> for theory and examples. <br>
+        Includes handy utilities for hashing work:
+        <ul><li><kbd>dedupe</kbd> - best-effort "on the fly" dedupe (for pipes)</li>
+            <li><kbd>getpass</kbd> - smart extraction of founds from result/pot files</li>
+            <li><kbd>rehex</kbd> - HEXify and de-HEXify plains based on a matrix of matching bytes</li>
+            <li><kbd>splitlen</kbd> - split input into different files based on record length</li>
+        </ul></li>
+    <li><a href="https://github.com/Cynosureprime/rlite">rlite</a> - a lightweight version of rling, also from CynoSure Prime</li>
+    <li><a href="https://blog.techsolvency.com/2025/04/managing-unique-wordlists-password-cracking.html">Managing unique wordlists for password cracking</a> - leveraging <kbd>rlite</kbd></li>
+</ul>
+
+<a id="download"></a>
+<hr>
+
+<h2>Download</h2>
+
+<p>
+<strong>NOTE</strong>: MDXfind is distributed as standalone binaries for the command line. There is no installer, and <strong>there is no GUI</strong>.
+</p>
+
+<p>In the directory below, you will see <strong>two</strong> zipfiles:</p>
+
+<ul>
+    <li><strong>mdxfind-X.XXX.zip</strong> - This is the latest release zipfile. It has everything you need to get started. It contains both <kbd>mdxfind</kbd> and <kbd>mdsplit</kbd>
+ binaries, for a variety of platforms (with filenames per platform that 
+should be self-explanatory). If you're not sure which one you need, it's
+ this one.</li>
+    <li><strong>mdxfind-latest.zip</strong> - This is a permanent, 
+predictable filename. It is always symlinked to the latest 
+release-specific zipfile, to support automated downloads (for Docker / 
+Vast / etc.)</li>
+</ul>
+
+<p>Note:</p>
+<ul>
+    <li>If an executable filename has no extension, the file is a Linux x86 binary (32- or 64-bit as shown).</li>
+    <li>Files with an asterisked description are "value-add" files added by me, downstream from Waffle's distribution zipfile.</li>
+    <li><strong>Separate static binaries are no longer needed</strong> as of version 1.130. Symlinks are provided for now (to minimize impact to workflows), but are <strong>deprecated</strong> and will be removed in the future.</li>
+    <li>Since <kbd>mdsplit</kbd> changes less often than <kbd>mdxfind</kbd>, <kbd>mdsplit</kbd> files may be older than <kbd>mdxfind</kbd> files. This is normal.</li>
+</ul>
+
+<h3>Where's the source?</h3>
+<p>MDXfind is not currently open source (no public GitHub, etc.), but it is free to use.</p>
+
+<h3>How is MDXfind licensed?</h3>
+
+<p>
+Permission is granted to use, copy, share, and redistribute this software for non-commercial purposes only.
+</p>
+
+<p>
+Modifications and derivative works are allowed, provided they are not used or distributed for commercial benefit.
+</p>
+
+<p>
+Redistribution of unmodified copies is permitted only for non-commercial purposes.
+</p>
+
+<p>
+Any commercial use, sale, or distribution for profit is strictly prohibited.
+</p>
+
+<pre><img src="MDXfind%20-%20official%20distribution%20Wiki_files/blank.gif" alt="Icon "> <a href="https://www.techsolvency.com/pub/bin/mdxfind/?C=N;O=D">Name</a>                    <a href="https://www.techsolvency.com/pub/bin/mdxfind/?C=M;O=A">Last modified</a>      <a href="https://www.techsolvency.com/pub/bin/mdxfind/?C=S;O=A">Size</a>  <a href="https://www.techsolvency.com/pub/bin/mdxfind/?C=D;O=A">Description</a><hr><img src="MDXfind%20-%20official%20distribution%20Wiki_files/back.gif" alt="[PARENTDIR]"> <a href="https://www.techsolvency.com/pub/bin/">Parent Directory</a>                             -   
+<img src="MDXfind%20-%20official%20distribution%20Wiki_files/folder.gif" alt="[DIR]"> <a href="https://www.techsolvency.com/pub/bin/mdxfind/archive/">archive/</a>                2025-08-27 02:49    -   retired/older files
+<img src="MDXfind%20-%20official%20distribution%20Wiki_files/text_002.gif" alt="[TXT]"> <a href="https://www.techsolvency.com/pub/bin/mdxfind/CHANGES.txt">CHANGES.txt</a>             2025-11-11 01:05   15K  Changelog*
+<img src="MDXfind%20-%20official%20distribution%20Wiki_files/text_002.gif" alt="[TXT]"> <a href="https://www.techsolvency.com/pub/bin/mdxfind/CHECKSUMS.MD5.txt">CHECKSUMS.MD5.txt</a>       2025-11-10 16:38  1.2K  MD5 checksums*
+<img src="MDXfind%20-%20official%20distribution%20Wiki_files/text_002.gif" alt="[TXT]"> <a href="https://www.techsolvency.com/pub/bin/mdxfind/CHECKSUMS.SHA256.txt">CHECKSUMS.SHA256.txt</a>    2025-11-10 16:38  2.1K  SHA256 checksums*
+<img src="MDXfind%20-%20official%20distribution%20Wiki_files/text_002.gif" alt="[TXT]"> <a href="https://www.techsolvency.com/pub/bin/mdxfind/algo_defs.txt">algo_defs.txt</a>           2025-08-26 00:27   22K  algo name -&gt; ID map**
+<img src="MDXfind%20-%20official%20distribution%20Wiki_files/text_002.gif" alt="[TXT]"> <a href="https://www.techsolvency.com/pub/bin/mdxfind/algorithms.txt">algorithms.txt</a>          2025-11-10 16:38   10K  supported hash types*
+<img src="MDXfind%20-%20official%20distribution%20Wiki_files/text.gif" alt="[TXT]"> <a href="https://www.techsolvency.com/pub/bin/mdxfind/example-found.res">example-found.res</a>       2025-08-18 22:00  255   Example cracking results*
+<img src="MDXfind%20-%20official%20distribution%20Wiki_files/text_002.gif" alt="[TXT]"> <a href="https://www.techsolvency.com/pub/bin/mdxfind/example-hashes.txt">example-hashes.txt</a>      2025-08-18 18:49  206   Example hashes*
+<img src="MDXfind%20-%20official%20distribution%20Wiki_files/text_002.gif" alt="[TXT]"> <a href="https://www.techsolvency.com/pub/bin/mdxfind/example-wordlist.dict">example-wordlist.dict</a>   2025-08-18 17:34    9   Example wordlist*
+<img src="MDXfind%20-%20official%20distribution%20Wiki_files/text_002.gif" alt="[TXT]"> <a href="https://www.techsolvency.com/pub/bin/mdxfind/file-output.txt">file-output.txt</a>         2025-11-10 16:38  4.1K  file(1) binary details*
+<img src="MDXfind%20-%20official%20distribution%20Wiki_files/text_002.gif" alt="[TXT]"> <a href="https://www.techsolvency.com/pub/bin/mdxfind/maphashcat.txt">maphashcat.txt</a>          2025-08-26 00:27  8.6K  hashcat mode -&gt; algo map**
+<img src="MDXfind%20-%20official%20distribution%20Wiki_files/binary.gif" alt="[BIN]"> <a href="https://www.techsolvency.com/pub/bin/mdxfind/mdsplit">mdsplit</a>                 2025-09-12 14:09  159K  
+<img src="MDXfind%20-%20official%20distribution%20Wiki_files/binary.gif" alt="[BIN]"> <a href="https://www.techsolvency.com/pub/bin/mdxfind/mdsplit-32">mdsplit-32</a>              2025-09-12 14:15   94K  (32-bit)
+<img src="MDXfind%20-%20official%20distribution%20Wiki_files/binary.gif" alt="[BIN]"> <a href="https://www.techsolvency.com/pub/bin/mdxfind/mdsplit-32.exe">mdsplit-32.exe</a>          2025-09-12 14:16   92K  (32-bit)
+<img src="MDXfind%20-%20official%20distribution%20Wiki_files/text_002.gif" alt="[   ]"> <a href="https://www.techsolvency.com/pub/bin/mdxfind/mdsplit-old.txt">mdsplit-old.txt</a>         2019-09-01 22:33  2.5K  old Perl version (ref)
+<img src="MDXfind%20-%20official%20distribution%20Wiki_files/binary.gif" alt="[BIN]"> <a href="https://www.techsolvency.com/pub/bin/mdxfind/mdsplit.arm6">mdsplit.arm6</a>            2025-09-12 14:03   74K  e.g. Pi v1 x32
+<img src="MDXfind%20-%20official%20distribution%20Wiki_files/binary.gif" alt="[BIN]"> <a href="https://www.techsolvency.com/pub/bin/mdxfind/mdsplit.arm7">mdsplit.arm7</a>            2025-09-12 14:03   74K  e.g. Pi early 2 B x32
+<img src="MDXfind%20-%20official%20distribution%20Wiki_files/binary.gif" alt="[BIN]"> <a href="https://www.techsolvency.com/pub/bin/mdxfind/mdsplit.arm8">mdsplit.arm8</a>            2025-09-12 14:14  131K  e.g. Pi 3+ x64
+<img src="MDXfind%20-%20official%20distribution%20Wiki_files/binary.gif" alt="[BIN]"> <a href="https://www.techsolvency.com/pub/bin/mdxfind/mdsplit.exe">mdsplit.exe</a>             2025-09-12 14:16  166K  
+<img src="MDXfind%20-%20official%20distribution%20Wiki_files/binary.gif" alt="[BIN]"> <a href="https://www.techsolvency.com/pub/bin/mdxfind/mdsplit.freebsd">mdsplit.freebsd</a>         2025-09-12 14:09  158K  
+<img src="MDXfind%20-%20official%20distribution%20Wiki_files/binary.gif" alt="[BIN]"> <a href="https://www.techsolvency.com/pub/bin/mdxfind/mdsplit.mac">mdsplit.mac</a>             2025-10-24 14:52  342K  
+<img src="MDXfind%20-%20official%20distribution%20Wiki_files/binary.gif" alt="[BIN]"> <a href="https://www.techsolvency.com/pub/bin/mdxfind/mdsplit.macm1">mdsplit.macm1</a>           2025-10-24 14:52  342K  DEPRECATED - use mdsplit.mac (universal)
+<img src="MDXfind%20-%20official%20distribution%20Wiki_files/binary.gif" alt="[BIN]"> <a href="https://www.techsolvency.com/pub/bin/mdxfind/mdsplit.power8">mdsplit.power8</a>          2025-09-12 14:07  259K  
+<img src="MDXfind%20-%20official%20distribution%20Wiki_files/binary.gif" alt="[BIN]"> <a href="https://www.techsolvency.com/pub/bin/mdxfind/mdsplit.static">mdsplit.static</a>          2025-09-12 14:09  159K  DEPRECATED - use mdsplit
+<img src="MDXfind%20-%20official%20distribution%20Wiki_files/binary.gif" alt="[BIN]"> <a href="https://www.techsolvency.com/pub/bin/mdxfind/mdxfind">mdxfind</a>                 2025-11-10 17:45  3.9M  
+<img src="MDXfind%20-%20official%20distribution%20Wiki_files/compressed.gif" alt="[   ]"> <a href="https://www.techsolvency.com/pub/bin/mdxfind/mdxfind-1.136.zip">mdxfind-1.136.zip</a>       2025-11-11 00:53   16M  
+<img src="MDXfind%20-%20official%20distribution%20Wiki_files/binary.gif" alt="[BIN]"> <a href="https://www.techsolvency.com/pub/bin/mdxfind/mdxfind-32">mdxfind-32</a>              2025-11-10 17:08  3.3M  (32-bit)
+<img src="MDXfind%20-%20official%20distribution%20Wiki_files/binary.gif" alt="[BIN]"> <a href="https://www.techsolvency.com/pub/bin/mdxfind/mdxfind-32.exe">mdxfind-32.exe</a>          2025-11-10 20:12  4.0M  (32-bit)
+<img src="MDXfind%20-%20official%20distribution%20Wiki_files/compressed.gif" alt="[   ]"> <a href="https://www.techsolvency.com/pub/bin/mdxfind/mdxfind-latest.zip">mdxfind-latest.zip</a>      2025-11-11 00:53   16M  stable symlink to latest
+<img src="MDXfind%20-%20official%20distribution%20Wiki_files/binary.gif" alt="[BIN]"> <a href="https://www.techsolvency.com/pub/bin/mdxfind/mdxfind.arm6">mdxfind.arm6</a>            2025-11-10 16:38  2.4M  e.g. Pi v1 x32
+<img src="MDXfind%20-%20official%20distribution%20Wiki_files/binary.gif" alt="[BIN]"> <a href="https://www.techsolvency.com/pub/bin/mdxfind/mdxfind.arm7">mdxfind.arm7</a>            2025-11-10 16:32  2.5M  e.g. Pi early 2 B x32
+<img src="MDXfind%20-%20official%20distribution%20Wiki_files/binary.gif" alt="[BIN]"> <a href="https://www.techsolvency.com/pub/bin/mdxfind/mdxfind.arm8">mdxfind.arm8</a>            2025-09-12 14:09  2.1M  e.g. Pi 3+ x64
+<img src="MDXfind%20-%20official%20distribution%20Wiki_files/binary.gif" alt="[BIN]"> <a href="https://www.techsolvency.com/pub/bin/mdxfind/mdxfind.exe">mdxfind.exe</a>             2025-11-10 19:01  3.8M  
+<img src="MDXfind%20-%20official%20distribution%20Wiki_files/binary.gif" alt="[BIN]"> <a href="https://www.techsolvency.com/pub/bin/mdxfind/mdxfind.freebsd">mdxfind.freebsd</a>         2025-11-10 16:37  4.1M  
+<img src="MDXfind%20-%20official%20distribution%20Wiki_files/binary.gif" alt="[BIN]"> <a href="https://www.techsolvency.com/pub/bin/mdxfind/mdxfind.mac">mdxfind.mac</a>             2025-11-10 16:27  4.9M  
+<img src="MDXfind%20-%20official%20distribution%20Wiki_files/binary.gif" alt="[BIN]"> <a href="https://www.techsolvency.com/pub/bin/mdxfind/mdxfind.macm1">mdxfind.macm1</a>           2025-11-10 16:27  4.9M  DEPRECATED - use mdxfind.mac (universal)
+<img src="MDXfind%20-%20official%20distribution%20Wiki_files/binary.gif" alt="[BIN]"> <a href="https://www.techsolvency.com/pub/bin/mdxfind/mdxfind.power8">mdxfind.power8</a>          2025-11-10 17:40  3.0M  
+<img src="MDXfind%20-%20official%20distribution%20Wiki_files/binary.gif" alt="[BIN]"> <a href="https://www.techsolvency.com/pub/bin/mdxfind/mdxfind.static">mdxfind.static</a>          2025-11-10 17:45  3.9M  DEPRECATED - use mdxfind
+<img src="MDXfind%20-%20official%20distribution%20Wiki_files/text_002.gif" alt="[TXT]"> <a href="https://www.techsolvency.com/pub/bin/mdxfind/top-10k-pass.dict">top-10k-pass.dict</a>       2025-08-18 22:46   80K  <a href="https://hashmob.net/resources/hashmob">HashMob</a>'s top10k list*
+<img src="MDXfind%20-%20official%20distribution%20Wiki_files/text_002.gif" alt="[TXT]"> <a href="https://www.techsolvency.com/pub/bin/mdxfind/usage.txt">usage.txt</a>               2025-11-10 16:38  2.8K  mdxfind/mdsplit usage*
+<hr></pre>
+
+<p>
+<kbd>*</kbd> File not part of the distro -- metadata added by me (errors mine, not Cynosure Prime's)
+<br>
+<kbd>**</kbd> File not part of the distro -- metadata added by Waffle
+</p>
+
+<h2>Credits</h2>
+<p>
+All credit to Waffle and hops of <a href="https://blog.cynosureprime.com/">CynoSure Prime</a>
+ for this powerful hash-cracking tool. A serious amount of careful 
+thought and insight has gone into making it reliable and efficient.
+</p>
+
+<hr>
+
+<p>
+<a href="https://www.techsolvency.com/pub/bin/">.. Up to /pub/bin</a>
+<br>
+<a href="https://www.techsolvency.com/">&lt;- Back to Tech Solvency</a>
+</p>
+
+
+
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>

@@ -1,0 +1,6 @@
+aaaabbbbccccddddeeeeffffaaaabbbb
+bbbbccccddddeeeeffffaaaa11111111
+ccccddddeeeeffffaaaa2222bbbb3333
+ddddeeeeffffaaaa3333cccc44445555
+eeeeffffaaaa4444dddd5555eeee6666
+ffffaaaa5555eeee6666ffff77778888

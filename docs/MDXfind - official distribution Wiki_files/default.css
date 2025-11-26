@@ -1,0 +1,252 @@
+/* Tech Solvency CSS */
+/* $Id: default.css,v 1.16 2025/08/17 22:48:46 royce Exp royce $ */
+
+body {
+  color: black;
+  font-family: "Exo 2";
+  font-size: 18px;
+}
+
+h1 {
+  font-size: 1.5em;
+  text-align: left;
+}
+
+hr {
+  background: green;
+  border-width: 1px;
+  border-color: silver;
+  border-style: solid;
+  color: green;
+  height: 8px;
+  clear: both;
+}
+
+.nobullet {
+    list-style-type: none;
+    padding-left: 0;      /* Removes the default padding */
+}
+
+hr.half {
+  width: 50%;
+}
+
+a:hover {
+  color: maroon;
+}
+
+em {
+  font-style: italic;
+}
+
+table {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.large {
+  font-size: 1.5rem;
+}
+
+.larger {
+  font-size: 1.8rem;
+}
+
+table.wide {
+  width: 95%;
+}
+
+td {
+  padding: 0 0em;
+}
+
+table.sparse td {
+  padding: 0.3em;
+}
+
+ul.flowing {
+  margin: 1em;
+  border: 1em;
+  padding: 1em;
+}
+
+li {
+    margin: 0.5em 0 0.5em 0;
+}
+
+/* Allow large images to resize on smaller screens, preserving aspect ratio */
+@media only screen and (max-width: 1190px) {
+    img.big {
+        width: 99%;
+        height: auto;
+    }
+}
+
+@media only screen and (max-width: 800px) {
+    img.medium {
+        width: 90%;
+        height: auto;
+    }
+}
+
+@media only screen and (min-width: 1600px) {
+	body {
+		margin: auto;
+		width: 75%;
+	}
+}
+
+div.checks {
+    border: none;
+}
+
+form.checks {
+    margin: 0 auto;
+    width: 100%;
+    border: none;
+}
+form.checks fieldset {
+    margin: 0 auto;
+    border: 0;
+}
+
+.checks ul {
+	list-style: none;
+	padding: 0;
+}
+
+.narrow {
+    display: none;
+}
+
+/* Reduce list margins and certain table columns on smaller screens */
+@media only screen and (max-width: 768px) {
+    ul {
+        margin-left: 0.3em;
+        padding-left: 0.3em;
+    }
+    li {
+        margin: 0.3em 0 0.3em 0;
+        padding: 0;
+    }
+    .wide {
+        display: none;
+    }
+    .narrow {
+        display: inline;
+    }
+}
+
+div.linklist {
+  margin-left: 2em;
+  margin-right: 2em;
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+
+div.flowing {
+  border-width: 1px;
+  display: block;  /* suppress marker */
+  margin-left: 2em;
+  margin-right: 2em;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  padding: 1em;
+  float: left;
+  border: .25em solid #66CCFF;
+}
+
+div.quotable {
+/*  background: #66CCFF;  */
+  background: #88DDFF;
+  font-style: italic;
+}
+
+div.flowleft {
+  text-align: left;
+  float: left;
+}
+
+.strike {
+  text-decoration: line-through;
+}
+
+div.center {
+  text-align: center;
+}
+
+div.flowcenter {
+  text-align: center;
+}
+
+div.subtitle {
+  text-align: left;
+}
+
+div.flowright {
+  text-align: right;
+  float: right;
+}
+
+div.footer {
+  font-size: smaller;
+}
+
+@font-face {
+  font-family: 'Exo 2';
+  font-weight: 400;
+  font-style: normal;
+  font-display: fallback;
+  src: url('/fonts/Exo-2-regular/Exo-2-regular.eot');
+  src: url('/fonts/Exo-2-regular/Exo-2-regular.eot?#iefix') format('embedded-opentype'),
+       local('Exo 2'),
+       local('Exo-2-regular'),
+       url('/fonts/Exo-2-regular/Exo-2-regular.woff2') format('woff2'),
+       url('/fonts/Exo-2-regular/Exo-2-regular.woff') format('woff'),
+       url('/fonts/Exo-2-regular/Exo-2-regular.ttf') format('truetype'),
+       url('/fonts/Exo-2-regular/Exo-2-regular.svg#Exo2') format('svg');
+}
+
+html.center-container {
+	height: 95%;
+}
+body.center-container {
+	height: 95%;
+}
+div.center-container {
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.headsup { background: #ffcc99; }
+
+.withimage {
+    display: inline-block;
+    vertical-align: top;
+}
+
+@media (prefers-color-scheme: dark) {
+
+  body, h1, h2, h3, h4, h5 {
+    background-color: #444;
+    color: #e4f4e4;
+  }
+
+  a { color: #6bebf2; }
+
+  a:hover { color: #2babb2; }
+
+  a:visited { color: #5bbbe2; }
+
+  img { filter: grayscale(30%); }
+
+  hr { 
+    border-color: #4bcbd2;
+    background: #4bcbd2; 
+    color: #4bcbd2;
+  }
+
+}
+
