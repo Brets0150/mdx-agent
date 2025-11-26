@@ -1,7 +1,7 @@
-Generic Cracker v2.0 (Python)
+Generic Cracker v2.1 (Portable Python)
 MDXfind Wrapper for Hashtopolis
-Built: Wed Nov 26 07:05:48 AM UTC 2025
+Built: Wed Nov 26 03:27:18 PM UTC 2025
 System: Linux x86_64
-Kernel: 6.8.0-88-generic
-Build Method: PyInstaller 6.17.0
-Executable Size: 7.2M
+Build Method: Portable Python (no compilation)
+Python Version Required: 3.6+
+Package Type: Source Distribution

@@ -61,9 +61,20 @@ echo -e "${GREEN}Creating package structure...${NC}"
 mkdir -p "$PACKAGE_DIR"
 mkdir -p "$PACKAGE_DIR/mdx_bin"
 
-# Copy executable
+# Copy executable as cracker.bin
 echo -e "${GREEN}Copying executable...${NC}"
-cp dist/cracker "$PACKAGE_DIR/cracker"
+cp dist/cracker "$PACKAGE_DIR/cracker.bin"
+chmod +x "$PACKAGE_DIR/cracker.bin"
+
+# Create launcher script
+echo -e "${GREEN}Creating launcher script...${NC}"
+cat > "$PACKAGE_DIR/cracker" << 'LAUNCHER_EOF'
+#!/bin/bash
+# Generic Cracker Launcher
+# Executes the Python-compiled cracker binary
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+exec "$SCRIPT_DIR/cracker.bin" "$@"
+LAUNCHER_EOF
 chmod +x "$PACKAGE_DIR/cracker"
 
 # Copy MDXfind binaries
@@ -99,7 +110,8 @@ cat > "$PACKAGE_DIR/DEPLOYMENT.md" << 'EOF'
 
 ## Directory Structure
 
-- `cracker` - Standalone executable (Python + PyInstaller)
+- `cracker` - Launcher script (use this to run the cracker)
+- `cracker.bin` - Standalone executable (Python + PyInstaller)
 - `mdx_bin/` - MDXfind binaries for different platforms
 
 ## Key Advantages of Python Version
@@ -237,8 +249,8 @@ fi
 
 # Show dependencies info
 echo -e "${GREEN}Checking dependencies...${NC}"
-echo -e "${YELLOW}Executable dependencies:${NC}"
-ldd "$PACKAGE_DIR/cracker" | head -10
+echo -e "${YELLOW}Executable dependencies (cracker.bin):${NC}"
+ldd "$PACKAGE_DIR/cracker.bin" | head -10
 
 echo -e "${GREEN}================================${NC}"
 echo -e "${GREEN}Packaging complete!${NC}"

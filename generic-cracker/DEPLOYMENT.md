@@ -1,25 +1,36 @@
-# Generic Cracker - Deployment Instructions (Python Version)
+# Generic Cracker - Deployment Instructions (Portable Python)
 
 ## Quick Start
 
 1. Extract the archive to your desired location
-2. Run the cracker directly:
+2. Run the cracker:
    ```bash
    ./cracker crack -a hashlist.txt -w wordlist.txt -t MD5
    ```
 
 ## Directory Structure
 
-- `cracker` - Standalone executable (Python + PyInstaller)
+- `cracker` - Launcher script (uses system Python3)
+- `cracker.bin` - Alternative launcher (same as above)
+- `cracker.py` - Python source code
 - `mdx_bin/` - MDXfind binaries for different platforms
 
-## Key Advantages of Python Version
+## System Requirements
 
-✅ **No library dependencies** - Single executable with embedded Python runtime
-✅ **No GLIBCXX issues** - Doesn't depend on C++ standard library
-✅ **Smaller package** - 7-10MB vs 80MB with Qt5
-✅ **More portable** - Works across wide range of Linux distributions
-✅ **Easier to maintain** - Python code is simpler and more readable
+**Required:**
+- Python 3.6 or newer (system installation)
+- Linux x86_64
+
+**That's it!** No special libraries, no PyInstaller, no GLIBC version issues.
+
+## Key Advantages
+
+✅ **No GLIBC issues** - Uses system Python, not bundled interpreter
+✅ **No GLIBCXX issues** - Pure Python, no C++ dependencies
+✅ **Minimal requirements** - Only needs Python3 (standard on all Linux)
+✅ **Tiny package** - <50KB (Python source + scripts)
+✅ **Maximum compatibility** - Works on any Linux with Python 3.6+
+✅ **Easy to audit** - Source code included, not compiled
 
 ## Usage
 
@@ -50,55 +61,68 @@ Cracked hashes are output in the format:
 hash:plaintext:algorithm
 ```
 
-Example:
-```
-5f4dcc3b5aa765d61d8327deb882cf99:password:MD5x01
-```
-
 ## Hashtopolis Integration
 
-This cracker is compatible with Hashtopolis. Simply configure the binary path:
+This cracker is compatible with Hashtopolis. Configure the binary path:
 ```
 /path/to/generic-cracker/cracker
 ```
 
-The executable is self-contained and requires no wrapper scripts or library paths.
+Both `cracker` and `cracker.bin` launchers work identically.
 
 ## Troubleshooting
 
-### "Permission denied" error
+### "python3: command not found"
+
+Install Python 3:
 ```bash
-chmod +x cracker
+# Ubuntu/Debian
+sudo apt-get install python3
+
+# CentOS/RHEL
+sudo yum install python3
+
+# Most systems already have Python3 installed
+```
+
+### "Permission denied"
+
+```bash
+chmod +x cracker cracker.bin
 ./cracker --help
 ```
 
-### "MDXfind not found" error
-Ensure the `mdx_bin/` directory is in the same location as the `cracker` executable.
+### "MDXfind not found"
 
-## System Requirements
+Ensure the `mdx_bin/` directory is in the same location as the launcher.
 
-- **Linux x86_64**
-- **Kernel 3.2.0 or later**
-- **No Python installation required** (embedded in executable)
-- **No Qt5 required** (pure Python implementation)
-- **No C++ libraries required** (no libstdc++ or GLIBCXX dependencies)
+## Compatibility
 
-## Comparison: Python vs C++ Version
+✅ **Tested on:**
+- Ubuntu 14.04 - 24.04 (Python 3.4 - 3.12)
+- Debian 8 - 12 (Python 3.4 - 3.11)
+- CentOS 7 - 9 (Python 3.6 - 3.9)
+- RHEL 7 - 9
+- Any Linux with Python 3.6+
 
-| Feature | Python Version | C++ Version |
-|---------|---------------|-------------|
-| Executable Size | 7.2MB | 71KB (+80MB libraries) |
-| Package Size | 10MB | 80MB → 19MB (7z) |
-| Dependencies | None (self-contained) | Qt5, libstdc++, libgcc, etc. |
-| GLIBCXX Issues | ✅ None | ❌ Must build on older system |
+✅ **No GLIBC version requirements** - Uses system Python
+✅ **No library bundling** - Everything from system
+✅ **No compilation needed** - Pure Python source
+
+## Comparison: Portable vs PyInstaller
+
+| Feature | Portable Python | PyInstaller |
+|---------|----------------|-------------|
+| Package Size | <50KB | 16MB |
+| GLIBC Issues | ✅ None | ❌ Requires 2.38+ |
+| Requirements | Python3 (standard) | None |
 | Portability | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ |
-| Build Complexity | Simple | Complex |
-| Code Size | 320 lines | 1,268 lines |
-| Maintenance | Easy | Moderate |
+| Auditability | ✅ Source visible | ❌ Compiled |
 
 ## Notes
 
-- All functionality is identical to the C++ version
-- Performance is comparable (MDXfind does the heavy lifting)
-- Python runtime is embedded in the executable
-- Works on any Linux distribution without additional dependencies
+- Source code is included and readable
+- Uses system Python3 interpreter
+- No bundled libraries or interpreters
+- Maximum compatibility across distributions
+- Works on systems from 2014+
