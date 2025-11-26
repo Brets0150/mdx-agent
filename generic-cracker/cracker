@@ -1,0 +1,14 @@
+#!/bin/bash
+################################################################################
+# Generic Cracker Launcher
+# Sets up library paths and executes the cracker binary
+################################################################################
+
+# Get the directory where this script is located
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Set library path to include bundled libraries
+export LD_LIBRARY_PATH="$SCRIPT_DIR/lib:$LD_LIBRARY_PATH"
+
+# Execute the cracker binary with all arguments passed through
+exec "$SCRIPT_DIR/cracker.bin" "$@"

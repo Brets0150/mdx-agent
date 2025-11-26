@@ -18,6 +18,9 @@ int main(int argc, char *argv[]){
     parser.addVersionOption();
     parser.addPositionalArgument("action", QCoreApplication::translate("main", "Action to execute (keyspace or crack)"));
 
+    // Allow unknown options to be silently ignored (for Hashtopolis compatibility)
+    parser.setOptionsAfterPositionalArgumentsMode(QCommandLineParser::ParseAsOptions);
+
     QCommandLineOption maskOption(QStringList() << "m" << "mask",
            QCoreApplication::translate("main", "Use mask for attack"),
            QCoreApplication::translate("main", "mask"));
@@ -48,7 +51,7 @@ int main(int argc, char *argv[]){
            QCoreApplication::translate("main", "seconds"));
     parser.addOption(timeoutOption);
 
-    QCommandLineOption hashTypeOption(QStringList() << "hash-type",
+    QCommandLineOption hashTypeOption(QStringList() << "t" << "type",
            QCoreApplication::translate("main", "Hash types for MDXfind (e.g., 'ALL,!user,salt' or 'MD5,SHA1')"),
            QCoreApplication::translate("main", "types"));
     parser.addOption(hashTypeOption);
@@ -59,11 +62,20 @@ int main(int argc, char *argv[]){
     parser.addOption(iterationsOption);
 
     // Process the actual command line arguments given by the user
-    parser.process(a);
+    // Use parse() instead of process() to handle unknown options gracefully
+    if(!parser.parse(QCoreApplication::arguments())){
+        // Silently ignore parse errors (unknown options from Hashtopolis)
+        // Only show error if it's not about unknown options
+        QString errorText = parser.errorText();
+        if(!errorText.contains("Unknown option") && !errorText.contains("Unknown options")){
+            cerr << "Error: " << errorText.toStdString() << endl;
+            return -1;
+        }
+    }
 
     const QStringList args = parser.positionalArguments();
 
-    // Check if help or version was requested
+    // Check if help or version was requested (already handled by addHelpOption/addVersionOption)
     if(args.isEmpty()){
         parser.showHelp();
         return 0;
