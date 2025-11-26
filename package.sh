@@ -69,15 +69,19 @@ else
     done
 fi
 
-# Copy essential system libraries (libstdc++, libgcc)
+# Copy essential system libraries (excluding libstdc++ and libgcc_s for compatibility)
+# These should use the system versions to avoid GLIBC version conflicts
 echo -e "${GREEN}Bundling system libraries...${NC}"
-SYS_LIBS=$(ldd "$CRACKER_BIN" | grep -E "libstdc\+\+|libgcc_s|libicui18n|libicuuc|libicudata|libpcre|libz\.so|libdouble-conversion" | awk '{print $3}')
+SYS_LIBS=$(ldd "$CRACKER_BIN" | grep -E "libicui18n|libicuuc|libicudata|libpcre|libz\.so|libdouble-conversion" | awk '{print $3}')
 for lib in $SYS_LIBS; do
     if [ -f "$lib" ]; then
         echo "  Copying $(basename $lib)"
         cp "$lib" "$PACKAGE_DIR/lib/"
     fi
 done
+
+# Note: libstdc++ and libgcc_s are intentionally NOT bundled
+# to avoid GLIBCXX version conflicts with the target system
 
 # Create launcher wrapper script
 echo -e "${GREEN}Creating launcher script...${NC}"
