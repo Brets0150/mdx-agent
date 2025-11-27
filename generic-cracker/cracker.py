@@ -13,8 +13,48 @@ import tempfile
 import re
 import threading
 import time
+import signal
 from pathlib import Path
 from queue import Queue, Empty
+
+# Global reference to MDXfind subprocess for signal handling
+_mdxfind_process = None
+_shutdown_requested = False
+
+
+def _signal_handler(signum, frame):
+    """Handle termination signals from Hashtopolis agent"""
+    global _mdxfind_process, _shutdown_requested
+
+    signal_name = 'SIGTERM' if signum == signal.SIGTERM else 'SIGINT'
+    print(f"\n[SIGNAL] Received {signal_name}, shutting down gracefully...", file=sys.stderr, flush=True)
+
+    _shutdown_requested = True
+
+    if _mdxfind_process and _mdxfind_process.poll() is None:
+        print("[SIGNAL] Terminating MDXfind subprocess...", file=sys.stderr, flush=True)
+        try:
+            _mdxfind_process.terminate()
+            # Give it 2 seconds to terminate gracefully
+            try:
+                _mdxfind_process.wait(timeout=2)
+                print("[SIGNAL] MDXfind terminated gracefully", file=sys.stderr, flush=True)
+            except subprocess.TimeoutExpired:
+                print("[SIGNAL] MDXfind did not terminate, killing forcefully...", file=sys.stderr, flush=True)
+                _mdxfind_process.kill()
+                _mdxfind_process.wait()
+                print("[SIGNAL] MDXfind killed", file=sys.stderr, flush=True)
+        except Exception as e:
+            print(f"[SIGNAL] Error terminating MDXfind: {e}", file=sys.stderr, flush=True)
+
+    # Exit cleanly
+    print("[SIGNAL] Shutdown complete, exiting", file=sys.stderr, flush=True)
+    sys.exit(0)
+
+
+# Register signal handlers for SIGTERM and SIGINT
+signal.signal(signal.SIGTERM, _signal_handler)
+signal.signal(signal.SIGINT, _signal_handler)
 
 
 class CrackerApp:
@@ -139,6 +179,9 @@ class CrackerApp:
                 progress_tracker.limit = limit  # Store limit for termination check
                 cracked_hashes = []
 
+                # Declare global before assignment
+                global _mdxfind_process
+
                 try:
                     # Run MDXfind with separate stdout and stderr
                     process = subprocess.Popen(
@@ -148,6 +191,9 @@ class CrackerApp:
                         text=True,
                         bufsize=1
                     )
+
+                    # Store process reference globally for signal handler
+                    _mdxfind_process = process
 
                     # Setup timeout if specified
                     timeout_occurred = False
@@ -181,8 +227,27 @@ class CrackerApp:
                     # Main loop: process output and report status
                     last_status_time = time.time()
                     status_interval = 5  # Output STATUS every 5 seconds
+                    initial_ppid = os.getppid()  # Store initial parent PID
 
                     while process.poll() is None or not stdout_queue.empty() or not stderr_queue.empty():
+                        # Check if shutdown was requested by signal handler
+                        global _shutdown_requested
+                        if _shutdown_requested:
+                            print("[SHUTDOWN] Shutdown requested, exiting main loop", file=sys.stderr, flush=True)
+                            break
+
+                        # Check if parent process died (orphaned) - means shell wrapper was killed
+                        current_ppid = os.getppid()
+                        if current_ppid != initial_ppid:
+                            print(f"[PARENT-DEATH] Parent process died (PPID changed from {initial_ppid} to {current_ppid}), shutting down...", file=sys.stderr, flush=True)
+                            process.terminate()
+                            try:
+                                process.wait(timeout=2)
+                            except subprocess.TimeoutExpired:
+                                process.kill()
+                                process.wait()
+                            break
+
                         # Process stdout (cracked hashes)
                         try:
                             line = stdout_queue.get(timeout=0.1)
@@ -225,9 +290,12 @@ class CrackerApp:
                     # Wait for process to complete
                     process.wait()
 
+                    # Clear global process reference
+                    _mdxfind_process = None
+
                     # Output final STATUS
-                    # Mark as complete if timeout didn't occur
-                    if not timeout_occurred:
+                    # Mark as complete if timeout didn't occur and not shutdown
+                    if not timeout_occurred and not _shutdown_requested:
                         progress_tracker.set_complete()
                     self._output_status(progress_tracker)
 
@@ -235,6 +303,8 @@ class CrackerApp:
 
                 except Exception as e:
                     print(f"ERROR: MDXfind execution failed: {e}", file=sys.stderr)
+                    # Clear global process reference on error
+                    _mdxfind_process = None
                     return 1
 
             finally:
