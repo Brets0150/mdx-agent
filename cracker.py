@@ -374,9 +374,10 @@ class CrackerApp:
                     hash_parts = hash_plain.split(':', 1)
                     hash_value = hash_parts[0]
                     plaintext = hash_parts[1] if len(hash_parts) > 1 else ''
+                    plaintext = plaintext.replace(':', ',')
 
                     # Output in Hashtopolis format: hash:plaintext:algorithm
-                    output = f"{hash_value}:{plaintext}:{algorithm}"
+                    output = f"{hash_value}:{algorithm},{plaintext}"
                     print(output, flush=True)
                     cracked.append(output)
 
