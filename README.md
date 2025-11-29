@@ -50,7 +50,7 @@ To use MDX-Agent with Hashtopolis, use the `mdx-agent.7z` archive download URL d
 
 ### Then create a new task with the generic binary, which is the MDX-agent.
 
-**NOTE:** When using the `--hash-type` (or -t) option, be sure to enclose the regex expression in double quotes so MDXFIND can correctly identify the hash type. If the double quote is blocked by hashtopolish, you’ll need to update your server’s "Characters that are not allowed to be used in attack command inputs" configuration to allow it. This ensures the full string is passed to MDXFIND on the command line.
+**NOTE:** When using the `--hash-type` (or -t) option, be sure to enclose the regex expression in double quotes so MDXFIND can correctly identify the hash type. If the double quote is blocked by Hashtopolis, you’ll need to update your server’s "Characters that are not allowed to be used in attack command inputs" configuration to allow it. This ensures the full string is passed to MDXFIND on the command line.
 
 ![new-task_mdx-agent](./docs/new-task_mdx-agent.png)
 
@@ -102,7 +102,7 @@ MDX Agent has compatibility issues with Hashtopolis Speed Benchmarks due to the 
 
 - **Use Runtime Benchmark only** when creating Hashtopolis tasks
 - **Set benchmark runtime to at least 45 seconds in Hashtopolis Server config.**
-- Minimum 30 seconds may work, but 45+ seconds ensures MDXfind has sufficient time to start reporting cracking speed
+- Minimum 30 seconds may work, but 45+ seconds ensures MDXfind has sufficient time to start reporting cracking speed. If you have a large hashlist, then you will need to set the benchmark time to 100 seconds.
 - This allows Hashtopolis to properly calculate chunk sizes for agent distribution
 
 #### 2. Task Termination Limitations
